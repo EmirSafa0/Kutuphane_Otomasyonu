@@ -1,0 +1,7 @@
+﻿{
+  "Server": "YOUR_SERVER_NAME",
+  "Database": "Kutuphane_Otomasyonu",
+  "IntegratedSecurity": true,
+  "Encrypt": true,
+  "TrustServerCertificate": true
+}

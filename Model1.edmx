@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Kutuphane_OtomasyonuModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AdminBilgileri">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="admin_Adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="admin_Soyadi" Type="nvarchar" MaxLength="50" />
+          <Property Name="admin_TC" Type="nvarchar" MaxLength="11" />
+          <Property Name="admin_TelefonNumarasi" Type="nvarchar" MaxLength="10" />
+          <Property Name="admin_KullaniciAdi" Type="nvarchar" MaxLength="50" />
+          <Property Name="admin_KullaniciSifresi" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Gorevliler">
+          <Key>
+            <PropertyRef Name="gorevli_ID" />
+          </Key>
+          <Property Name="gorevli_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gorevli_Adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="gorevli_Soyadi" Type="nvarchar" MaxLength="50" />
+          <Property Name="gorevli_TC" Type="nvarchar" MaxLength="11" />
+          <Property Name="gorevli_TelefonNumarasi" Type="nvarchar" MaxLength="10" />
+          <Property Name="gorevli_KullaniciAdi" Type="nvarchar" MaxLength="50" />
+          <Property Name="gorevli_KullaniciSifresi" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Kitaplar">
+          <Key>
+            <PropertyRef Name="kitap_ID" />
+          </Key>
+          <Property Name="kitap_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kitap_Adi" Type="nvarchar" MaxLength="200" />
+          <Property Name="kitap_Yazar" Type="nvarchar" MaxLength="30" />
+          <Property Name="kitap_Turu" Type="nvarchar" MaxLength="50" />
+          <Property Name="kitap_Dili" Type="nvarchar" MaxLength="50" />
+          <Property Name="kitap_SayfaSayisi" Type="int" />
+          <Property Name="kitap_YayinTarihi" Type="int" />
+          <Property Name="kitap_Yayinevi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kitap_KayitTarihi" Type="int" />
+          <Property Name="kitap_StokDurumu" Type="int" />
+        </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="kullanici_ID" />
+          </Key>
+          <Property Name="kullanici_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_Adi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kullanici_Soyadi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kullanici_TC" Type="nvarchar" MaxLength="11" />
+          <Property Name="kullanici_TelNumarasi" Type="nvarchar" MaxLength="10" />
+          <Property Name="kullanici_cinsiyet" Type="nvarchar" MaxLength="1" />
+          <Property Name="kullanici_Dogumtarihi" Type="datetime" />
+          <Property Name="kullanici_KullaniciAdi" Type="nvarchar" MaxLength="50" />
+          <Property Name="kullanici_Sifresi" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="OduncBilgileri">
+          <Key>
+            <PropertyRef Name="odunc_ID" />
+          </Key>
+          <Property Name="odunc_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_ID" Type="int" />
+          <Property Name="kitap_ID" Type="int" />
+          <Property Name="odunc_VerilisTarihi" Type="datetime" />
+          <Property Name="odunc_SonTarih" Type="datetime" />
+          <Property Name="odunc_Durumu" Type="bit" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_OduncBilgileri_Kitaplar">
+          <End Role="Kitaplar" Type="Self.Kitaplar" Multiplicity="0..1" />
+          <End Role="OduncBilgileri" Type="Self.OduncBilgileri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kitaplar">
+              <PropertyRef Name="kitap_ID" />
+            </Principal>
+            <Dependent Role="OduncBilgileri">
+              <PropertyRef Name="kitap_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OduncBilgileri_Kullanicilar">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="OduncBilgileri" Type="Self.OduncBilgileri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="kullanici_ID" />
+            </Principal>
+            <Dependent Role="OduncBilgileri">
+              <PropertyRef Name="kullanici_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UP_StokDurumunuArtırma" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="odunc_ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UP_StokDurumunuAzaltma" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="kullanici_ID" Type="int" Mode="In" />
+          <Parameter Name="kitap_ID" Type="int" Mode="In" />
+          <Parameter Name="verilisTarihi" Type="datetime" Mode="In" />
+          <Parameter Name="sonTarih" Type="datetime" Mode="In" />
+        </Function>
+        <EntityContainer Name="Kutuphane_OtomasyonuModelStoreContainer">
+          <EntitySet Name="AdminBilgileri" EntityType="Self.AdminBilgileri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gorevliler" EntityType="Self.Gorevliler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kitaplar" EntityType="Self.Kitaplar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OduncBilgileri" EntityType="Self.OduncBilgileri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_OduncBilgileri_Kitaplar" Association="Self.FK_OduncBilgileri_Kitaplar">
+            <End Role="Kitaplar" EntitySet="Kitaplar" />
+            <End Role="OduncBilgileri" EntitySet="OduncBilgileri" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OduncBilgileri_Kullanicilar" Association="Self.FK_OduncBilgileri_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="OduncBilgileri" EntitySet="OduncBilgileri" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Kutuphane_OtomasyonuModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AdminBilgileri">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="admin_Adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="admin_Soyadi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="admin_TC" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="admin_TelefonNumarasi" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="admin_KullaniciAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="admin_KullaniciSifresi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="kullanici_ID" />
+          </Key>
+          <Property Name="kullanici_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_Adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_Soyadi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_TC" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_TelNumarasi" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_cinsiyet" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_Dogumtarihi" Type="DateTime" Precision="3" />
+          <Property Name="kullanici_KullaniciAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_Sifresi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OduncBilgileri" Relationship="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kullanicilar" FromRole="Kullanicilar" ToRole="OduncBilgileri" />
+        </EntityType>
+        <EntityContainer Name="Kutuphane_OtomasyonuEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AdminBilgileri" EntityType="Self.AdminBilgileri" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" />
+          <EntitySet Name="Kitaplar" EntityType="Kutuphane_OtomasyonuModel.Kitaplar" />
+          <EntitySet Name="Gorevliler" EntityType="Kutuphane_OtomasyonuModel.Gorevliler" />
+          <EntitySet Name="OduncBilgileri" EntityType="Kutuphane_OtomasyonuModel.OduncBilgileri" />
+          <EntitySet Name="sysdiagrams" EntityType="Kutuphane_OtomasyonuModel.sysdiagrams" />
+          <AssociationSet Name="FK_OduncBilgileri_Kitaplar" Association="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kitaplar">
+            <End Role="Kitaplar" EntitySet="Kitaplar" />
+            <End Role="OduncBilgileri" EntitySet="OduncBilgileri" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OduncBilgileri_Kullanicilar" Association="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="OduncBilgileri" EntitySet="OduncBilgileri" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(Kutuphane_OtomasyonuModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(Kutuphane_OtomasyonuModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="UP_StokDurumunuArtırma">
+          <Parameter Name="odunc_ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UP_StokDurumunuAzaltma">
+            <Parameter Name="kullanici_ID" Mode="In" Type="Int32" />
+            <Parameter Name="kitap_ID" Mode="In" Type="Int32" />
+            <Parameter Name="verilisTarihi" Mode="In" Type="DateTime" />
+            <Parameter Name="sonTarih" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Kitaplar">
+          <Key>
+            <PropertyRef Name="kitap_ID" />
+          </Key>
+          <Property Name="kitap_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kitap_Adi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="kitap_Yazar" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="kitap_Turu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kitap_Dili" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kitap_SayfaSayisi" Type="Int32" />
+          <Property Name="kitap_YayinTarihi" Type="Int32" />
+          <Property Name="kitap_Yayinevi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="kitap_KayitTarihi" Type="Int32" />
+          <NavigationProperty Name="OduncBilgileri" Relationship="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kitaplar" FromRole="Kitaplar" ToRole="OduncBilgileri" />
+          <Property Name="kitap_StokDurumu" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Gorevliler">
+          <Key>
+            <PropertyRef Name="gorevli_ID" />
+          </Key>
+          <Property Name="gorevli_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gorevli_Adi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gorevli_Soyadi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gorevli_TC" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="gorevli_TelefonNumarasi" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="gorevli_KullaniciAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gorevli_KullaniciSifresi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OduncBilgileri">
+          <Key>
+            <PropertyRef Name="odunc_ID" />
+          </Key>
+          <Property Name="odunc_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_ID" Type="Int32" />
+          <Property Name="kitap_ID" Type="Int32" />
+          <Property Name="odunc_VerilisTarihi" Type="DateTime" Precision="3" />
+          <Property Name="odunc_SonTarih" Type="DateTime" Precision="3" />
+          <Property Name="odunc_Durumu" Type="Boolean" />
+          <NavigationProperty Name="Kitaplar" Relationship="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kitaplar" FromRole="OduncBilgileri" ToRole="Kitaplar" />
+          <NavigationProperty Name="Kullanicilar" Relationship="Kutuphane_OtomasyonuModel.FK_OduncBilgileri_Kullanicilar" FromRole="OduncBilgileri" ToRole="Kullanicilar" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_OduncBilgileri_Kitaplar">
+          <End Type="Kutuphane_OtomasyonuModel.Kitaplar" Role="Kitaplar" Multiplicity="0..1" />
+          <End Type="Kutuphane_OtomasyonuModel.OduncBilgileri" Role="OduncBilgileri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kitaplar">
+              <PropertyRef Name="kitap_ID" />
+            </Principal>
+            <Dependent Role="OduncBilgileri">
+              <PropertyRef Name="kitap_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OduncBilgileri_Kullanicilar">
+          <End Type="Kutuphane_OtomasyonuModel.Kullanicilar" Role="Kullanicilar" Multiplicity="0..1" />
+          <End Type="Kutuphane_OtomasyonuModel.OduncBilgileri" Role="OduncBilgileri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="kullanici_ID" />
+            </Principal>
+            <Dependent Role="OduncBilgileri">
+              <PropertyRef Name="kullanici_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Kutuphane_OtomasyonuModelStoreContainer" CdmEntityContainer="Kutuphane_OtomasyonuEntities">
+          <EntitySetMapping Name="AdminBilgileri">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.AdminBilgileri">
+              <MappingFragment StoreEntitySet="AdminBilgileri">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="admin_Adi" ColumnName="admin_Adi" />
+                <ScalarProperty Name="admin_Soyadi" ColumnName="admin_Soyadi" />
+                <ScalarProperty Name="admin_TC" ColumnName="admin_TC" />
+                <ScalarProperty Name="admin_TelefonNumarasi" ColumnName="admin_TelefonNumarasi" />
+                <ScalarProperty Name="admin_KullaniciAdi" ColumnName="admin_KullaniciAdi" />
+                <ScalarProperty Name="admin_KullaniciSifresi" ColumnName="admin_KullaniciSifresi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kullanicilar">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.Kullanicilar">
+              <MappingFragment StoreEntitySet="Kullanicilar">
+                <ScalarProperty Name="kullanici_Sifresi" ColumnName="kullanici_Sifresi" />
+                <ScalarProperty Name="kullanici_KullaniciAdi" ColumnName="kullanici_KullaniciAdi" />
+                <ScalarProperty Name="kullanici_Dogumtarihi" ColumnName="kullanici_Dogumtarihi" />
+                <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+                <ScalarProperty Name="kullanici_Adi" ColumnName="kullanici_Adi" />
+                <ScalarProperty Name="kullanici_Soyadi" ColumnName="kullanici_Soyadi" />
+                <ScalarProperty Name="kullanici_TC" ColumnName="kullanici_TC" />
+                <ScalarProperty Name="kullanici_TelNumarasi" ColumnName="kullanici_TelNumarasi" />
+                <ScalarProperty Name="kullanici_cinsiyet" ColumnName="kullanici_cinsiyet" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kitaplar">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.Kitaplar">
+              <MappingFragment StoreEntitySet="Kitaplar">
+                <ScalarProperty Name="kitap_StokDurumu" ColumnName="kitap_StokDurumu" />
+                <ScalarProperty Name="kitap_KayitTarihi" ColumnName="kitap_KayitTarihi" />
+                <ScalarProperty Name="kitap_Yayinevi" ColumnName="kitap_Yayinevi" />
+                <ScalarProperty Name="kitap_YayinTarihi" ColumnName="kitap_YayinTarihi" />
+                <ScalarProperty Name="kitap_SayfaSayisi" ColumnName="kitap_SayfaSayisi" />
+                <ScalarProperty Name="kitap_Dili" ColumnName="kitap_Dili" />
+                <ScalarProperty Name="kitap_Turu" ColumnName="kitap_Turu" />
+                <ScalarProperty Name="kitap_Yazar" ColumnName="kitap_Yazar" />
+                <ScalarProperty Name="kitap_Adi" ColumnName="kitap_Adi" />
+                <ScalarProperty Name="kitap_ID" ColumnName="kitap_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gorevliler">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.Gorevliler">
+              <MappingFragment StoreEntitySet="Gorevliler">
+                <ScalarProperty Name="gorevli_KullaniciSifresi" ColumnName="gorevli_KullaniciSifresi" />
+                <ScalarProperty Name="gorevli_KullaniciAdi" ColumnName="gorevli_KullaniciAdi" />
+                <ScalarProperty Name="gorevli_TelefonNumarasi" ColumnName="gorevli_TelefonNumarasi" />
+                <ScalarProperty Name="gorevli_TC" ColumnName="gorevli_TC" />
+                <ScalarProperty Name="gorevli_Soyadi" ColumnName="gorevli_Soyadi" />
+                <ScalarProperty Name="gorevli_Adi" ColumnName="gorevli_Adi" />
+                <ScalarProperty Name="gorevli_ID" ColumnName="gorevli_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OduncBilgileri">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.OduncBilgileri">
+              <MappingFragment StoreEntitySet="OduncBilgileri">
+                <ScalarProperty Name="odunc_Durumu" ColumnName="odunc_Durumu" />
+                <ScalarProperty Name="odunc_SonTarih" ColumnName="odunc_SonTarih" />
+                <ScalarProperty Name="odunc_VerilisTarihi" ColumnName="odunc_VerilisTarihi" />
+                <ScalarProperty Name="kitap_ID" ColumnName="kitap_ID" />
+                <ScalarProperty Name="kullanici_ID" ColumnName="kullanici_ID" />
+                <ScalarProperty Name="odunc_ID" ColumnName="odunc_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Kutuphane_OtomasyonuModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Kutuphane_OtomasyonuModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Kutuphane_OtomasyonuModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Kutuphane_OtomasyonuModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="UP_StokDurumunuArtırma" FunctionName="Kutuphane_OtomasyonuModel.Store.UP_StokDurumunuArtırma" />
+          <FunctionImportMapping FunctionImportName="UP_StokDurumunuAzaltma" FunctionName="Kutuphane_OtomasyonuModel.Store.UP_StokDurumunuAzaltma" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
